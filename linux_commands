@@ -1,0 +1,233 @@
+
+# bash commands examples
+http://tuxtweaks.com/2010/10/remove-old-kernels-in-ubuntu-with-one-command/
+
+# free space in the boot partition
+http://tuxtweaks.com/2010/10/remove-old-kernels-in-ubuntu-with-one-command/
+
+#install java
+https://linuxize.com/post/install-java-on-ubuntu-18-04/
+
+#environment variables
+https://devconnected.com/set-environment-variable-bash-how-to/
+
+#export and add to the path a new environment variable from the shell.
+#  This will not be permanent
+$ export ORACLE_HOME=/u01/app/oracle/product/12.1.0/dbhome_1
+$ export PATH=$ORACLE_HOME/bin:$PATH  ## asi se hace da command line, without quotes
+# or
+# This will be permanent as we are putting it into .bashrc
+$ echo 'PATH="$HOME/.local/bin:$PATH"' >> $HOME/.bashrc && source $HOME/.bashrc
+
+
+#ADD NEW permanent environment vars
+$ nano /home/user/.bashrc
+o# Content of the .bashrc file
+export JAVA_HOME="/usr/lib/jvm/jdk8u252-b09"
+# then from the shell
+$ source .bashrc
+
+#UPDATE the path
+https://linuxize.com/post/how-to-add-directory-to-path-in-linux/
+$ nano ~/.bashrc
+export PATH="$HOME/bin:$PATH"
+$ source ~/.bashrc
+
+#file permission
+https://www.freecodecamp.org/news/linux-chmod-chown-change-file-permissions/
+https://www.guru99.com/file-permissions.html
+https://www.tecmint.com/copy-file-permissions-and-ownership-to-another-file-in-linux/
+https://linuxize.com/post/chmod-recursive/
+
+#copy file permission
+sudo chmod --reference=log4j.xml endpointConfig.properties
+sudo chmod -R --reference=standalone standalone_02_ubmApi_err_avvio_locale/
+
+#set fil ownership
+sudo chown wildfly:wildfly endpointConfig.properties
+
+# space used in the system
+sudo docker system df  # space used by docker in images in the system
+df -h
+# size of a directory
+sudo du -sh /var
+
+
+#pipeing command outputs
+(copy all files matching a pattern  using pipeing)
+https://superuser.com/questions/312348/linux-copy-all-files-matching-pattern-from-dir-and-subdirs-into-a-single-dir
+
+
+#mkdir
+mkdir -p dir1/dir2  ## -p for recursive
+https://askubuntu.com/a/731730/450892
+
+#ls
+ls [OPTIONS]... [FILE]...
+-a do not ignore entries with .
+-l long list format with many infos
+-lh print sizes in human readable format
+-t sort by ,odification tim
+
+
+
+#grep
+grep [OPTION]... PATTERNS [FILE]...
+-n: show line number
+-C: cotext. nof. lines before and after the match line 
+-v: negation
+-i: make case sensitive
+-r: recursive
+-l: only file names
+--exclud: exclude files matching patter
+e.g.
+grep -rn name.full .
+grep -rl hola .
+grep -ni Error server.log
+ls -al | grep queues | grep -v illimity
+grep -r --exclude="*.sql"  YAG901 . 
+
+# ignore several patterns
+# do not include spaces in the patterns
+find / -name "*python*" | grep -E -v "/usr/lib/rhythmbox/|/var/lib/dpkg/"
+
+
+#directory or file size
+du -sh _collaudo_/
+du -sch * .[!.]* | sort -rh
+# https://stackoverflow.com/questions/1019116/using-ls-to-list-directories-and-their-total-sizes
+
+
+#find recursively
+find . -name "*.java" -type f
+
+#find recursively and delete
+find . -name "*.ear" -type f -delete
+
+
+#copy all *.so files from src and it's subdirs into dst
+find src/ -type f | grep -i so$ | xargs -i cp {} dst
+
+#remove with pattern
+sudo find . -type f \( -name "*Moby*" -o -name "*Neos*"  \) | xargs sudo rm
+find  . ! -regex '.*\.java$' -type f -print | grep -v "pom.xml" | grep -v ".sql" | grep -v ".jsp" | xargs rm
+
+
+
+# get files containing string
+grep -rl hola .     #'r' recursive, 'l' only file names
+
+# get lines in file having string
+grep -ni Error server.log
+
+# replacing substrings in files
+# https://stackoverflow.com/questions/11392478/how-to-replace-a-string-in-multiple-files-in-linux-command-line
+cd /path/to/your/folder
+sed -i 's/foo/bar/g' *  # foo will be replaced by bar
+
+# search for the old string in all files in the current directory, recursively,
+# and replace it by the new string
+grep -rl oldtext . | xargs sed -i 's/oldtext/newtext/g'
+# see https://stackoverflow.com/questions/1583219/how-can-i-do-a-recursive-find-replace-of-a-string-with-awk-or-sed
+
+find . -type f -print0 | xargs -0 sed -i  's/gamba.copy/copy-files/g'
+# https://serverfault.com/questions/172806/use-sed-recursively-in-linux
+
+
+
+# delete all remote branches in a remote
+git branch -r | grep -v -E 'develop|master'| sed -En 's|origin/||p' | xargs -i git push origin --delete {}
+
+#tail, per mostrare anche dynamicamente (opzione -f) le ultime x righe d un file 
+tail -1000f /usr/local/wildfly/standalone_03_ubmMT/log/server.log
+
+# archive extract files
+#https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/
+tar -xzvf archive.tar.gz -C ~/tmp
+tar czf archive.tar.gz --directory=mydir . # creates file archive.tar.gz from directory mydir in the current direcoty(.)
+# In the created archive, the archive itself will "replace" the directory. Therefore, if inside directory
+# mydir we have a bunch of files, we'll be crating a tar bomb.
+tar xvf archive.tar.gz [--directory={{directory}}] # exctract the content of archive.tar.gz into the current directory, or
+ # into the specified directory
+
+# for .gz files extract
+gzip -d fileName.gz
+
+#tar
+tar czf file.tar.gz -C dirA/ .  ## Create a tar file in the current dir (.) with the content of a
+tar czf file.tar.gz f1 f2 f3    ## directory, but not the directory itself. Instead of a directory 
+                                ## we can pass a sequence of files to be included in the tar file.
+
+tar xzf file.tar.gz -C dirA/  ## exctract the content of a tar file into a directory. The directory 
+                              ## must exist
+
+
+
+#for .zip files
+unzip ffn -d destinationDir 
+
+# see who is listening in a port
+sudo netstat -ltnp | grep ':8080'
+ps -ef|grep <process_pid>  # give me info about that process
+kill -9 <process_pid>
+
+
+#create links
+sudo ln -s ffn_original_executable /usr/local/bin/custom_link_name
+
+#follow a link until the real executable
+readlink -f `which python`
+
+#create desktop shortcut to applications
+sudo nano /usr/share/applications/sqldeveloper.desktop  # the extension .desktop is mandatory
+file contennt:
+[Desktop Entry]
+Name=Oracle SQL Developer
+Comment=SQL Developer from Oracle
+GenericName=SQL Tool
+Exec=/usr/local/bin/sqldeveloper
+Icon=/opt/sqldeveloper/icon.png
+Type=Application
+StartupNotify=true
+Categories=Utility;Oracle;Development;SQL; 
+
+# examples
+$ git ls-remote --tags origin | grep -Ev '0.0.1|1.0.0'|awk '{print $2}'| xargs -i git push origin :{}
+$ git branch -r|grep -vE 'master|develop|HEAD' | sed -e 's.origin/..'|xargs -i git push origin --delete {}
+
+#kill intellij
+$ ps -eo command | grep java | awk '{ print $1 }'  #this shows all java processes
+$ killall /opt/idea-IC-203.7717.56/jbr/bin/java
+
+#extract a portion of a file
+see answer by jw013 in 
+https://unix.stackexchange.com/questions/47407/cat-line-x-to-line-y-on-a-huge-file
+
+
+#see cpu speed
+sudo i7z
+
+#rm
+rm *.!(java)  # remove all files except .java extension
+find . -type f ! -name '*.txt' -delete
+
+
+# reverse-i-searc
+stty -ixon  # run to allow forward looking with ctrl+s as well, in reverse-i-search
+# https://stackoverflow.com/questions/12373586/how-to-reverse-i-search-back-and-forth
+
+#scp
+https://stackabuse.com/copying-a-directory-with-scp/
+https://unix.stackexchange.com/questions/188285/how-to-copy-a-file-from-a-remote-server-to-a-local-machine
+scp username@remote:/file/in/the/remote/system /where/to/put/in/local/system
+
+
+# os linux version
+$ (cat /etc/os-release || cat /usr/lib/os-release) 2>/dev/null
+
+# do for virtual box after every linux kernel upgrade
+sudo apt-get remove virtualbox-dkms
+sudo apt-get install virtualbox-dkms
+sudo modprobe vboxdrv
+
+
